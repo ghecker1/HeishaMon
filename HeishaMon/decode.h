@@ -44,7 +44,7 @@ static const char _unknown[] PROGMEM = "unknown";
 
 #define NUMBER_OF_TOPICS 142 //last topic number + 1
 #define NUMBER_OF_TOPICS_EXTRA 6 //last topic number + 1
-#define NUMBER_OF_OPT_TOPICS 7 //last topic number + 1
+#define NUMBER_OF_OPT_TOPICS 8 //last topic number + 1
 #define MAX_TOPIC_LEN 42 // max length + 1
 
 static const char optTopics[][20] PROGMEM = {
@@ -55,6 +55,7 @@ static const char optTopics[][20] PROGMEM = {
   "Pool_Water_Pump", // OPT4
   "Solar_Water_Pump", // OPT5
   "Alarm_State", // OPT6
+  "Demand_Control", // OPT7
 };
 
 static const char xtopics[][MAX_TOPIC_LEN] PROGMEM = {
@@ -560,6 +561,7 @@ static const char *Model[] PROGMEM = {"0", "Model"};
 static const char *HeatingControl[] PROGMEM = {"2", "Comfort", "Efficiency"};
 static const char *SmartDHW[] PROGMEM = {"2", "Variable", "Standard"};
 static const char *QuietModePriority[] PROGMEM = {"2", "Sound", "Capacity"};
+static const char *DemandControl[] PROGMEM = {"0", "DemandControl"};
 
 static const char **opttopicDescription[] PROGMEM = {
   OffOn,          //OPT0
@@ -569,6 +571,7 @@ static const char **opttopicDescription[] PROGMEM = {
   OffOn,          //OPT4
   OffOn,          //OPT5
   OffOn,          //OPT6
+  DemandControl,  //OPT7
 };
 
 static const char **xtopicDescription[] PROGMEM = {

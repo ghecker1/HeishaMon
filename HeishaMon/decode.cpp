@@ -272,6 +272,9 @@ String getOptDataValue(char* data, unsigned int Topic_Number) {
     case 6:
       Topic_Value = String((data[5] >> 0) & 0b1);
       break;
+    case 7:
+      Topic_Value = optionalPCBQuery[14];
+      break;
     default:
       break;
   }
