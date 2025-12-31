@@ -413,6 +413,8 @@ void decode_optional_heatpump_data(char* data, char* actOptData, PubSubClient & 
   optionalPCBQuery[5] = valueByte5;
 
   memcpy(actOptData, data, OPTDATASIZE);
+  // DemandControl
+  actOptData[14] = optionalPCBQuery[14];
   for (unsigned int Topic_Number = 0 ; Topic_Number < NUMBER_OF_OPT_TOPICS ; Topic_Number++) {
     if(updateTopic[Topic_Number]) {
       char log_msg[256];
