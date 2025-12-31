@@ -273,7 +273,7 @@ String getOptDataValue(char* data, unsigned int Topic_Number) {
       Topic_Value = String((data[5] >> 0) & 0b1);
       break;
     case 7:
-      Topic_Value = String(data[14]);
+      Topic_Value = String((byte)data[14]);
       break;
     default:
       break;
@@ -392,7 +392,7 @@ void decode_optional_heatpump_data(char* data, char* actOptData, PubSubClient & 
 
   // Use tmpData with DemandControl included
   memcpy(tmpData, data, OPTDATASIZE);
-  tmpData[14] = optionalPCBQuery[14];
+  memcpy(&tmpData[14], &optionalPCBQuery[14], sizeof(byte));
 
   for (unsigned int Topic_Number = 0 ; Topic_Number < NUMBER_OF_OPT_TOPICS ; Topic_Number++) {
     String Topic_Value;
