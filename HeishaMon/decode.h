@@ -42,7 +42,7 @@ static const char _unknown[] PROGMEM = "unknown";
 
 
 
-#define NUMBER_OF_TOPICS 144 //last topic number + 1
+#define NUMBER_OF_TOPICS 145 //last topic number + 1
 #define NUMBER_OF_TOPICS_EXTRA 6 //last topic number + 1
 #define NUMBER_OF_OPT_TOPICS 7 //last topic number + 1
 #define MAX_TOPIC_LEN 42 // max length + 1
@@ -220,6 +220,7 @@ static const char topics[][MAX_TOPIC_LEN] PROGMEM = {
   "Quiet_Mode_Priority",     //TOP141
   "Expansion_Valve",         //TOP142
   "DHW_Sensor_Selection",    //TOP143
+  "Demand_Control_Enabled",  //TOP144
 };
 
 static const byte topicBytes[] PROGMEM = { //can store the index as byte (8-bit unsigned humber) as there aren't more then 255 bytes (actually only 203 bytes) to decode
@@ -367,6 +368,7 @@ static const byte topicBytes[] PROGMEM = { //can store the index as byte (8-bit 
   11,    //TOP141
   175,   //TOP142
   11,    //TOP143
+  27,    //TOP144
 };
 
 
@@ -526,6 +528,7 @@ static const topicFP topicFunctions[] PROGMEM = {
   getBit3and4,       //TOP141
   getIntMinus1,      //TOP142
   getBit7and8,       //TOP143
+  getBit7and8,       //TOP144
 };
 
 static const char *DisabledEnabled[] PROGMEM = {"2", "Disabled", "Enabled"};
@@ -733,4 +736,5 @@ static const char **topicDescription[] PROGMEM = {
   QuietModePriority, //TOP141
   Steps,             //TOP142
   DHWSensorType,     //TOP143
+  DisabledEnabled,   //TOP144
 };

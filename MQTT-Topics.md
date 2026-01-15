@@ -160,6 +160,7 @@ TOP140 | main/Smart_DHW | Smart DHW
 TOP141 | main/Quiet_Mode_Priority | Quiet Mode Priority (0=sound, 1=capacity)
 TOP142 | main/Expansion_Valve | Expansion Valve (Steps)
 TOP143 | main/DHW_Sensor_Selection | DHW tank sensor selection (0=Top, 1=Center) (K/L series All-In-One only)
+TOP144 | main/Demand_Control_Enabled | Demand Control (0=disabled, 1=enabled)
 
 
 
