@@ -253,6 +253,7 @@ SET47 | SetForceHeater | Force heater mode (emergency heating), same as the heat
 SET48 | SetReset | Reset/confirm active heatpump fault code (e.g. H72). Equivalent to pressing "Reset" on the CZ-TAW1 remote / indoor unit panel. Writes byte 8 of the outgoing query. Clears latched errors that soft power-cycle (`SetHeatpump` 0→1) cannot clear. | 0=no action, 1=reset
 SET49 | SetOptionalPCB | Set Optional PCB | 0=off, 1=on
 SET50 | SetHeatingMode | Set heating mode. Note: Use with care. The heat curve and timers will be re-set to default. | 0=compensation curve, 1=direct
+SET51 | SetDemandControlEnabled | Set demand control enabled | 0=disabled, 1=enabled
 
 
 *If you operate your heatpump in water mode with direct temperature setup: topics ending xxxRequestTemperature will set the absolute target temperature.*

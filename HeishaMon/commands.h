@@ -77,6 +77,7 @@ unsigned int set_room_heater_state(char *msg, unsigned char *cmd, char *log_msg)
 unsigned int set_heater_on_outdoor_temp(char *msg, unsigned char *cmd, char *log_msg);
 unsigned int set_optional_pcb(char *msg, unsigned char *cmd, char *log_msg);
 unsigned int set_heating_mode(char *msg, unsigned char *cmd, char *log_msg);
+unsigned int set_demand_control_enabled(char *msg, unsigned char *cmd, char *log_msg);
 
 //optional pcb commands
 unsigned int set_heat_cool_mode(char *msg, char *log_msg);
@@ -176,6 +177,7 @@ const cmdStruct commands[] PROGMEM = {
   { "SetHeaterOnOutdoorTemp", set_heater_on_outdoor_temp },
   { "SetOptionalPCB", set_optional_pcb },
   { "SetHeatingMode", set_heating_mode },
+  { "SetDemandControlEnabled", set_demand_control_enabled },
 };
 
 struct optCmdStruct{
