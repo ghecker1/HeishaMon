@@ -176,6 +176,7 @@ OPT3 | optional/Z2_Mixing_Valve | Z2 mixing valve action request (0=off, 1=decre
 OPT4 | optional/Pool_Water_Pump | Pool water pump action request (0=off, 1=on)
 OPT5 | optional/Solar_Water_Pump | Solar water pump action request (0=off, 1=on)
 OPT6 | optional/Alarm_State | Alarm state (0=off, 1=on)
+OPT7 | optional/DemandControl | Demand Control
 
 ## Command Topics:
 

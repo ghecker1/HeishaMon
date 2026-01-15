@@ -272,6 +272,9 @@ String getOptDataValue(char* data, unsigned int Topic_Number) {
     case 6:
       Topic_Value = String((data[5] >> 0) & 0b1);
       break;
+    case 7:
+      Topic_Value = String((byte)data[14]);
+      break;
     default:
       break;
   }
@@ -380,14 +383,20 @@ void decode_heatpump_data_extra(char* data, char* actDataExtra, PubSubClient &mq
 void decode_optional_heatpump_data(char* data, char* actOptData, PubSubClient & mqtt_client, void (*log_message)(char*), char* mqtt_topic_base, unsigned int updateAllTime) {
   bool updateTime = false;
   bool updateTopic[NUMBER_OF_OPT_TOPICS] = { false };
+  char tmpData[OPTDATASIZE] = { '\0' };
 
   if ((lastalloptdatatime == 0) || ((unsigned long)(millis() - lastalloptdatatime) > (1000 * updateAllTime))) {
     updateTime = true;
     lastalloptdatatime = millis();
   }
+
+  // Use tmpData with DemandControl included
+  memcpy(tmpData, data, OPTDATASIZE);
+  memcpy(&tmpData[14], &optionalPCBQuery[14], sizeof(byte));
+
   for (unsigned int Topic_Number = 0 ; Topic_Number < NUMBER_OF_OPT_TOPICS ; Topic_Number++) {
     String Topic_Value;
-    Topic_Value = getOptDataValue(data, Topic_Number);
+    Topic_Value = getOptDataValue(tmpData, Topic_Number);
 
     if(getOptDataValue(actOptData, Topic_Number) != Topic_Value) {
       updateTopic[Topic_Number] = true;
@@ -409,7 +418,7 @@ void decode_optional_heatpump_data(char* data, char* actOptData, PubSubClient & 
   byte valueByte5 = data[5];
   optionalPCBQuery[5] = valueByte5;
 
-  memcpy(actOptData, data, OPTDATASIZE);
+  memcpy(actOptData, tmpData, OPTDATASIZE);
   for (unsigned int Topic_Number = 0 ; Topic_Number < NUMBER_OF_OPT_TOPICS ; Topic_Number++) {
     if(updateTopic[Topic_Number]) {
       char log_msg[256];
