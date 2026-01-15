@@ -229,6 +229,7 @@ SET39 | SetHeatingControl | Set heating control | 0=comfort, 1=efficiency
 SET40 | SetSmartDHW | Set SmartDHW | 0=variable, 1=standard
 SET41 | SetQuietModePriority | Set Quiet Mode Priority | 0=sound, 1=capacity
 SET42 | SetOptionalPCB | Set Optional PCB | 0=off, 1=on
+SET43 | SetHeatingMode | Set heating mode | 0=compensation curve, 1=direct
 
 
 *If you operate your heatpump in water mode with direct temperature setup: topics ending xxxRequestTemperature will set the absolute target temperature.*

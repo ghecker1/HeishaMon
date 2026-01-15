@@ -30,7 +30,7 @@
 |  TOP114 | 25 | 5e | 1st & 2nd bit = 10 <br/> 3rd & 4th bit = b01 no Pad Heater, b10 - Type A, b11 Type B <br/> 5th & 6th bit = b01 - Internal Heater 3kW, b10 - 6kW, b11 - 9kW <br/> 7th & 8th bit = b01 DHW Internal Heater , b10 - DHW External Heater | External Pad Heater <br/> Power of internal heater <br/> DHW heater Internal/External |
 |  TOP129/130/13/132 | 26 | 55 | (hex) Bivalent control, mode and ap settings. | Bivalent settings |
 |  TOP | 27 | 05 | SG Ready Control on/off (bit5and6) ,Demand Control on/off (bit7and8)  | SG Ready Control, Demand Control |
-|  TOP76+TOP81 | 28 | 09 | (hex) 09 - Compensation curve heat and direct cool, 05 - both compensation curves , 0a - direct heat and direct cool, 06 - heat direct, cool compensation curve  | Operation Setup -Installer -water temperature heating on status and cooling |
+|  TOP76+TOP81 | 28 | 09 | 7th & 8th bit heat (0b01=compensation curve, 0b10=direct), 5th & 6th bit cool (0b01=compensation curve, 0b10=direct) | Heat compensation curve/direct, Cool compensation curve/direct |
 |  TOP106 | 29 | 00 | 3rd & 4th bit = b01 - deltaT , b10 - Max. Duty | Pump flowrate (J/K/L series) |
 |  TOP139 | 30 | 00 |  5th & 6th bit = Heating Control (b01=Comfort, b10=Efficiency) <br/> 7th & 8th bit = DHW Defrost (b01=No, b10=Yes) | Heating Control (K/L series) <br/> DHW Defrost (K/L series) |
 |  TOP | 31 | 00 |   | 0 byte |
