@@ -1579,6 +1579,19 @@ void checkBootButton() {
   }
 }
 
+void optionalpcb() {
+  lastOptionalPCBRunTime = millis();
+  send_optionalpcb_query();
+  if ((unsigned long)(millis() - lastOptionalPCBSave) > (1000 * OPTIONALPCBSAVETIME)) {  // only save each 5 minutes
+    lastOptionalPCBSave = millis();
+    if (saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
+      log_message((char*)"Successfully saved optional PCB data to flash!");
+    } else {
+      log_message((char*)"Failed to save optional PCB data to flash!");
+    }
+  }
+}
+
 void loop() {
   //check boot button state
   checkBootButton();
@@ -1602,27 +1615,19 @@ void loop() {
   if (heishamonSettings.proxy) readProxy();
   #endif
 
-  if ((!sending) && (cmdnrel > 0)) { //check if there is a send command in the buffer
-    log_message(_F("Sending command from buffer"));
-    popCommandBuffer();
+  if (!sending) {
+    // optional pcb has highest priority.
+    if ((!heishamonSettings.listenonly) && (heishamonSettings.optionalPCB) && ((unsigned long)(millis() - lastOptionalPCBRunTime) > OPTIONALPCBQUERYTIME) ) {
+      optionalpcb();
+    } else if (cmdnrel > 0) { //check if there is a send command in the buffer
+      log_message(_F("Sending command from buffer"));
+      popCommandBuffer();        /// check if sending is true after popCommandBuffer()
+    }
   }
 
   if (heishamonSettings.use_1wire) dallasLoop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base);
 
   if (heishamonSettings.use_s0) s0Loop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base, heishamonSettings.s0Settings);
-
-  if ((!sending) && (!heishamonSettings.listenonly) && (heishamonSettings.optionalPCB) && ((unsigned long)(millis() - lastOptionalPCBRunTime) > OPTIONALPCBQUERYTIME) ) {
-    lastOptionalPCBRunTime = millis();
-    send_optionalpcb_query();
-    if ((unsigned long)(millis() - lastOptionalPCBSave) > (1000 * OPTIONALPCBSAVETIME)) {  // only save each 5 minutes
-      lastOptionalPCBSave = millis();
-      if (saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
-        log_message((char*)"Succesfully saved optional PCB data to flash!");
-      } else {
-        log_message((char*)"Failed to save optional PCB data to flash!");
-      }
-    }
-  }
 
   // run the data query only each WAITTIME
   if ((unsigned long)(millis() - lastRunTime) > (1000 * heishamonSettings.waitTime)) {
