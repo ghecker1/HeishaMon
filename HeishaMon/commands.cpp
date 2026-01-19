@@ -1,5 +1,11 @@
 #include "commands.h"
+
+#define SAVE_OPTIONAL_PCB 0
+
+#if SAVE_OPTIONAL_PCB == 1
 #include <LittleFS.h>
+#endif
+
 
 //removed checksum from default query, is calculated in send_command
 byte initialQuery[] = {0x31, 0x05, 0x10, 0x01, 0x00, 0x00, 0x00};
@@ -1206,6 +1212,7 @@ void send_heatpump_command(char* topic, char *msg, bool (*send_command)(byte*, i
 
 
 bool saveOptionalPCB(byte* command, int length) {
+#if SAVE_OPTIONAL_PCB == 1
   if (LittleFS.begin()) {
     File pcbfile = LittleFS.open("/optionalpcb.raw", "w");
     if (pcbfile) {
@@ -1215,9 +1222,11 @@ bool saveOptionalPCB(byte* command, int length) {
     }
 
   }
+#endif
   return false;
 }
 bool loadOptionalPCB(byte* command, int length) {
+#if SAVE_OPTIONAL_PCB == 1
   if (LittleFS.begin()) {
     if (LittleFS.exists("/optionalpcb.raw")) {
       File pcbfile = LittleFS.open("/optionalpcb.raw", "r");
@@ -1228,5 +1237,6 @@ bool loadOptionalPCB(byte* command, int length) {
       }
     }
   }
+#endif
   return false;
 }
