@@ -628,6 +628,7 @@ bool readSerial()
 void popCommandBuffer() {
   // to make sure we can pop a command from the buffer
   if ((!sending) && cmdnrel > 0) {
+    log_message(_F("Sending command from buffer"));
     send_command(cmdbuffer[cmdstart].data, cmdbuffer[cmdstart].length);
     cmdstart = (cmdstart + 1) % (MAXCOMMANDSINBUFFER);
     cmdnrel--;
@@ -1549,6 +1550,20 @@ void send_optionalpcb_query() {
   send_command(optionalPCBQuery, OPTIONALPCBQUERYSIZE);
 }
 
+void optionalpcbLoop() {
+  if ((!sending) && (!heishamonSettings.listenonly) && ((unsigned long)(millis() - lastOptionalPCBRunTime) > OPTIONALPCBQUERYTIME) ) {
+    lastOptionalPCBRunTime = millis();
+    send_optionalpcb_query();
+    if ((unsigned long)(millis() - lastOptionalPCBSave) > (1000 * OPTIONALPCBSAVETIME)) {  // only save each 5 minutes
+      lastOptionalPCBSave = millis();
+      if (saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
+        log_message((char*)"Successfully saved optional PCB data to flash!");
+      } else {
+        log_message((char*)"Failed to save optional PCB data to flash!");
+      }
+    }
+  }
+}
 
 void readHeatpump() {
   if (sending && ((unsigned long)(millis() - sendCommandReadTime) > SERIALTIMEOUT)) {
@@ -1597,32 +1612,20 @@ void loop() {
     HeishaOTLoop(actData, mqtt_client, heishamonSettings.mqtt_topic_base);
   }
 
-  readHeatpump();
+  readHeatpump(); // clears sending when the read is done
+
+  // optional pcb has highest priority. Call immediately after clearing sending.
+  if (heishamonSettings.optionalPCB) optionalpcbLoop();
+
   #ifdef ESP32
   if (heishamonSettings.proxy) readProxy();
   #endif
 
-  if ((!sending) && (cmdnrel > 0)) { //check if there is a send command in the buffer
-    log_message(_F("Sending command from buffer"));
-    popCommandBuffer();
-  }
+  popCommandBuffer();
 
   if (heishamonSettings.use_1wire) dallasLoop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base);
 
   if (heishamonSettings.use_s0) s0Loop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base, heishamonSettings.s0Settings);
-
-  if ((!sending) && (!heishamonSettings.listenonly) && (heishamonSettings.optionalPCB) && ((unsigned long)(millis() - lastOptionalPCBRunTime) > OPTIONALPCBQUERYTIME) ) {
-    lastOptionalPCBRunTime = millis();
-    send_optionalpcb_query();
-    if ((unsigned long)(millis() - lastOptionalPCBSave) > (1000 * OPTIONALPCBSAVETIME)) {  // only save each 5 minutes
-      lastOptionalPCBSave = millis();
-      if (saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
-        log_message((char*)"Succesfully saved optional PCB data to flash!");
-      } else {
-        log_message((char*)"Failed to save optional PCB data to flash!");
-      }
-    }
-  }
 
   // run the data query only each WAITTIME
   if ((unsigned long)(millis() - lastRunTime) > (1000 * heishamonSettings.waitTime)) {
