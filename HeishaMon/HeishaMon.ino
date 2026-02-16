@@ -1282,12 +1282,7 @@ void setupConditionals() {
 
   //load optional PCB data from flash
   if (heishamonSettings.optionalPCB) {
-    if (loadOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
-      log_message(_F("Succesfully loaded optional PCB data from saved flash!"));
-    }
-    else {
-      log_message(_F("Failed to load optional PCB data from flash!"));
-    }
+    loadOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE);
     delay(1500); //need 1.5 sec delay before sending first datagram
     send_optionalpcb_query(); //send one datagram already at start
     lastOptionalPCBRunTime = millis();
@@ -1616,11 +1611,7 @@ void loop() {
     send_optionalpcb_query();
     if ((unsigned long)(millis() - lastOptionalPCBSave) > (1000 * OPTIONALPCBSAVETIME)) {  // only save each 5 minutes
       lastOptionalPCBSave = millis();
-      if (saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE)) {
-        log_message((char*)"Succesfully saved optional PCB data to flash!");
-      } else {
-        log_message((char*)"Failed to save optional PCB data to flash!");
-      }
+      saveOptionalPCB(optionalPCBQuery, OPTIONALPCBQUERYSIZE);
     }
   }
 

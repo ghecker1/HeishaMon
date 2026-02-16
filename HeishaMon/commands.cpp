@@ -1,6 +1,7 @@
 #include "commands.h"
 #include <LittleFS.h>
 #include "webfunctions.h"
+#include "src/common/progmem.h"
 
 extern settingsStruct heishamonSettings;
 
@@ -1071,23 +1072,26 @@ void send_heatpump_command(char* topic, char *msg, bool (*send_command)(byte*, i
 
 }
 
-
-bool saveOptionalPCB(byte* command, int length) {
+void saveOptionalPCB(byte* command, int length) {
   if (LittleFS.begin()) {
     if (heishamonSettings.saveOptionalPCBSettings) {
       File pcbfile = LittleFS.open(pcbfile_name, "w");
       if (pcbfile) {
         pcbfile.write(command, length);
         pcbfile.close();
-        return true;
+        log_message(_F("Successfully saved optional PCB data to flash!"));
+        return;
       }
     } else if ((! heishamonSettings.saveOptionalPCBSettings) && LittleFS.exists(pcbfile_name)) {
       LittleFS.remove(pcbfile_name);
+      log_message(_F("Removed optional PCB data from flash!"));
+      return;
     }
   }
-  return false;
+  log_message(_F("Failed to save optional PCB data to flash!"));
 }
-bool loadOptionalPCB(byte* command, int length) {
+
+void loadOptionalPCB(byte* command, int length) {
   if (heishamonSettings.saveOptionalPCBSettings) {
     if (LittleFS.begin()) {
       if (LittleFS.exists(pcbfile_name)) {
@@ -1095,10 +1099,11 @@ bool loadOptionalPCB(byte* command, int length) {
         if (pcbfile) {
           pcbfile.read(command, length);
           pcbfile.close();
-          return true;
+          log_message(_F("Successfully loaded optional PCB data from saved flash!"));
+          return;
         }
       }
     }
+    log_message(_F("Failed to load optional PCB data from flash!"));
   }
-  return false;
 }
