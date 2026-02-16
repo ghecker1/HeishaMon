@@ -225,6 +225,7 @@ void loadSettings(settingsStruct *heishamonSettings) {
           heishamonSettings->logHexdump = ( jsonDoc["logHexdump"] == "enabled" ) ? true : false;
           heishamonSettings->logSerial1 = ( jsonDoc["logSerial1"] == "enabled" ) ? true : false;
           heishamonSettings->optionalPCB = ( jsonDoc["optionalPCB"] == "enabled" ) ? true : false;
+          heishamonSettings->saveOptionalPCBSettings = ( jsonDoc["saveOptionalPCBSettings"] == "enabled" ) ? true : false;
           heishamonSettings->opentherm = ( jsonDoc["opentherm"] == "enabled" ) ? true : false;
 #ifdef ESP32          
           heishamonSettings->proxy = ( jsonDoc["proxy"] == "enabled" ) ? true : false;
@@ -439,6 +440,11 @@ void settingsToJson(JsonDocument &jsonDoc, settingsStruct *heishamonSettings) {
   } else {
     jsonDoc["optionalPCB"] = "disabled";
   }
+  if (heishamonSettings->saveOptionalPCBSettings) {
+    jsonDoc["saveOptionalPCBSettings"] = "enabled";
+  } else {
+    jsonDoc["saveOptionalPCBSettings"] = "disabled";
+  }
   if (heishamonSettings->opentherm) {
     jsonDoc["opentherm"] = "enabled";
   } else {
@@ -488,6 +494,7 @@ int saveSettings(struct webserver_t *client, settingsStruct *heishamonSettings) 
   jsonDoc["logHexdump"] = String("disabled");
   jsonDoc["logSerial1"] = String("disabled");
   jsonDoc["optionalPCB"] = String("disabled");
+  jsonDoc["saveOptionalPCBSettings"] = String("disabled");
   jsonDoc["opentherm"] = String("disabled");
 
 #ifdef ESP32  
@@ -531,6 +538,8 @@ int saveSettings(struct webserver_t *client, settingsStruct *heishamonSettings) 
       jsonDoc["logSerial1"] = tmp->value;
     } else if (strcmp(tmp->name.c_str(), "optionalPCB") == 0) {
       jsonDoc["optionalPCB"] = tmp->value;
+    } else if (strcmp(tmp->name.c_str(), "saveOptionalPCBSettings") == 0) {
+      jsonDoc["saveOptionalPCBSettings"] = tmp->value;
     } else if (strcmp(tmp->name.c_str(), "opentherm") == 0) {
       jsonDoc["opentherm"] = tmp->value;
 #ifdef ESP32      
@@ -819,6 +828,10 @@ int getSettings(struct webserver_t *client, settingsStruct *heishamonSettings) {
 
         webserver_send_content_P(client, PSTR(",\"optionalPCB\":"), 15);
         itoa(heishamonSettings->optionalPCB, str, 10);
+        webserver_send_content(client, str, strlen(str));
+
+        webserver_send_content_P(client, PSTR(",\"saveOptionalPCBSettings\":"), 27);
+        itoa(heishamonSettings->saveOptionalPCBSettings, str, 10);
         webserver_send_content(client, str, strlen(str));
 
         webserver_send_content_P(client, PSTR(",\"opentherm\":"), 13);
