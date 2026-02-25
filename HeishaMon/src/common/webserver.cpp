@@ -2247,7 +2247,7 @@ void webserver_loop(void) {
   uint8_t i = 0;
 
   for(i=0;i<WEBSERVER_MAX_CLIENTS;i++) {
-    yield() // FIX;
+    delay(1);
     if(clients[i].data.step == 0 || clients[i].data.async == 1) {
       continue;
     }

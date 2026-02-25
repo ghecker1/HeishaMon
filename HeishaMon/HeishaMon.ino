@@ -1641,18 +1641,18 @@ void loop() {
   //webserver function
   statistics_start(STATISTICS_WEBSERVER_LOOP);
   webserver_loop();
-  yield() // FIX;
+  delay(1);
   statistics_end(STATISTICS_WEBSERVER_LOOP);
 
   // check wifi
   check_wifi();
-  yield() // FIX;
+  delay(1);
   // Handle OTA first.s
   ArduinoOTA.handle();
 
   //statistics_start(STATISTICS_MQTT_LOOP);
   mqtt_client.loop();
-  yield() // FIX;
+  delay(1);
   //statistics_end(STATISTICS_MQTT_LOOP);
 
   if (heishamonSettings.opentherm) {
@@ -1660,7 +1660,7 @@ void loop() {
   }
 
   readHeatpump();
-  yield() // FIX;
+  delay(1);
   #ifdef ESP32
   if (heishamonSettings.proxy) readProxy();
   #endif
@@ -1669,7 +1669,7 @@ void loop() {
     log_message(_F("Sending command from buffer"));
     popCommandBuffer();
   }
-  yield() // FIX;
+  delay(1);
 
   if (heishamonSettings.use_1wire) dallasLoop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base);
 
@@ -1687,7 +1687,7 @@ void loop() {
       }
     }
   }
-  yield() // FIX;
+  delay(1);
 
   // run the data query only each WAITTIME
   if ((unsigned long)(millis() - lastRunTime) > (1000 * heishamonSettings.waitTime)) {
@@ -1808,7 +1808,7 @@ void loop() {
     stats += F("}");
     sprintf_P(mqtt_topic, PSTR("%s/stats"), heishamonSettings.mqtt_topic_base);
     mqtt_client.publish(mqtt_topic, stats.c_str(), MQTT_RETAIN_VALUES);
-    yield() // FIX;
+    delay(1);
 
     //websocket stats
 #ifdef ESP32
@@ -1839,7 +1839,7 @@ void loop() {
 #endif
     
     websocket_write_all(log_msg, strlen(log_msg));        
-    yield() // FIX;
+    delay(1);
 
     //get new data
     if (!heishamonSettings.listenonly) send_panasonic_query();
@@ -1847,7 +1847,7 @@ void loop() {
     //Make sure the LWT is set to Online, even if the broker have marked it dead.
     sprintf_P(mqtt_topic, PSTR("%s/%s"), heishamonSettings.mqtt_topic_base, mqtt_willtopic);
     mqtt_client.publish(mqtt_topic, "Online");
-    yield() // FIX;
+    delay(1);
 
 #ifdef ESP8266
     if (WiFi.isConnected()) {
@@ -1857,8 +1857,8 @@ void loop() {
   }
 
   timerqueue_update();
-  yield() // FIX;
+  delay(1);
   #ifdef ESP32
-  yield() // FIX; // to keep watchdog happy
+  delay(1); // to keep watchdog happy
   #endif
 }
