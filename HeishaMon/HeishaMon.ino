@@ -758,8 +758,7 @@ struct performance {
 };
 struct performance statistics[1];
 enum {
-  STATISTICS_WEBSERVER_LOOP = 0,
-/*
+  STATISTICS_WEBSERVER_LOOP = 0  /*,
   STATISTICS_WEBSERVER_CB,
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
