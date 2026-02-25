@@ -788,6 +788,11 @@ void statistics_log1(struct performance *s, char *name) {
   log_message(log_msg);
 }
 void statistics_log() {
+  static unsigned long next = 0;
+  if (millis() < next) {
+    return;
+  }
+  next = millis() + 1000;
   statistics_log1(&statistics[STATISTICS_WEBSERVER_LOOP], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
   statistics_log1(&statistics[STATISTICS_WEBSERVER_CB], (char *)PSTR("STATISTICS_WEBSERVER_CB"));
   statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
