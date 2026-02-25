@@ -1150,9 +1150,9 @@ int8_t _webserver_cb(struct webserver_t *client, void *dat) {
 }
 
 int8_t webserver_cb(struct webserver_t *client, void *dat) {
-  log_message(_F("> webserver_cb"));
+  statistics_start(STATISTICS_WEBSERVER_CB);
   int8_t ret = _webserver_cb(client, dat);
-  log_message(_F("< webserver_cb"));
+  statistics_end(STATISTICS_WEBSERVER_CB);
   return ret;
 }
 
@@ -1596,6 +1596,7 @@ struct performance {
 struct performance statistics[3];
 enum {
   STATISTICS_WEBSERVER_LOOP = 0,
+  STATISTICS_WEBSERVER_CB,
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
 };
@@ -1624,6 +1625,7 @@ void statistics_log1(struct performance *s, char *name) {
 }
 void statistics_log() {
   statistics_log1(&statistics[STATISTICS_WEBSERVER_LOOP], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
+  statistics_log1(&statistics[STATISTICS_WEBSERVER_CB], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
   statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
   statistics_log1(&statistics[STATISTICS_MQTT_LOOP], (char *)PSTR("STATISTICS_MQTT_LOOP"));
 }
