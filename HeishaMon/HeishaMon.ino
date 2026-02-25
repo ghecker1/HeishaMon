@@ -1593,8 +1593,7 @@ struct performance {
   unsigned long lt10s = 0;
   unsigned long gt10s = 0;
 };
-typedef struct performance performance_t;
-performance_t statistics[3];
+struct performance statistics[3];
 enum {
   STATISTICS_WEBSERVER_LOOP = 0,
   STATISTICS_LOOP,
@@ -1619,7 +1618,7 @@ void statistics_end(int id) {
     statistics[id].gt10s++;
   }
 }
-void statistics_log1(performance_t *s, char *name) {
+void statistics_log1(struct performance *s, char *name) {
   sprintf_P(log_msg, PSTR("%s: %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s);
   log_message(log_msg);
 }
