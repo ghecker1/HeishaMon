@@ -2369,9 +2369,9 @@ void _webserver_loop(void) {
 }
 
 void webserver_loop(void) {
-  log_message(_F("> webserver_loop"));
+  log_message(PSTR("> webserver_loop"));
   _webserver_loop();
-  log_message(_F("< webserver_loop"));
+  log_message(PSTR("< webserver_loop"));
 }
 
 int8_t webserver_start(int port, webserver_cb_t *callback, uint8_t async) {
