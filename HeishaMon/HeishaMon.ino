@@ -749,6 +749,51 @@ void setupOTA() {
   ArduinoOTA.begin();
 }
 
+void log_message(char* string);
+struct performance {
+  unsigned long tstart = 0;
+  unsigned long lt100ms = 0;
+  unsigned long lt1s = 0;
+  unsigned long lt10s = 0;
+  unsigned long gt10s = 0;
+};
+struct performance statistics[3];
+enum {
+  STATISTICS_WEBSERVER_LOOP = 0,
+  STATISTICS_WEBSERVER_CB,
+  STATISTICS_LOOP,
+  STATISTICS_MQTT_LOOP
+};
+void statistics_start(int id) {
+  statistics[id].tstart = millis();
+}
+void statistics_end(int id) {
+  if (statistics[id].tstart == 0) {
+    return;
+  }
+  unsigned long t = (unsigned long)(millis() - statistics[id].tstart);
+  statistics[id].tstart = 0;
+  if (t < 100) {
+    statistics[id].lt100ms++;
+  } else if (t < 1000) {
+    statistics[id].lt1s++;
+  } else if (t < 10000){
+    statistics[id].lt10s++;
+  } else {
+    statistics[id].gt10s++;
+  }
+}
+void statistics_log1(struct performance *s, char *name) {
+  sprintf_P(log_msg, PSTR("%s: %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s);
+  log_message(log_msg);
+}
+void statistics_log() {
+  statistics_log1(&statistics[STATISTICS_WEBSERVER_LOOP], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
+  statistics_log1(&statistics[STATISTICS_WEBSERVER_CB], (char *)PSTR("STATISTICS_WEBSERVER_CB"));
+  statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
+  statistics_log1(&statistics[STATISTICS_MQTT_LOOP], (char *)PSTR("STATISTICS_MQTT_LOOP"));
+}
+
 
 
 int8_t _webserver_cb(struct webserver_t *client, void *dat) {
@@ -1584,50 +1629,6 @@ void checkBootButton() {
         factoryReset();
       }
   }
-}
-
-struct performance {
-  unsigned long tstart = 0;
-  unsigned long lt100ms = 0;
-  unsigned long lt1s = 0;
-  unsigned long lt10s = 0;
-  unsigned long gt10s = 0;
-};
-struct performance statistics[3];
-enum {
-  STATISTICS_WEBSERVER_LOOP = 0,
-  STATISTICS_WEBSERVER_CB,
-  STATISTICS_LOOP,
-  STATISTICS_MQTT_LOOP
-};
-void statistics_start(int id) {
-  statistics[id].tstart = millis();
-}
-void statistics_end(int id) {
-  if (statistics[id].tstart == 0) {
-    return;
-  }
-  unsigned long t = (unsigned long)(millis() - statistics[id].tstart);
-  statistics[id].tstart = 0;
-  if (t < 100) {
-    statistics[id].lt100ms++;
-  } else if (t < 1000) {
-    statistics[id].lt1s++;
-  } else if (t < 10000){
-    statistics[id].lt10s++;
-  } else {
-    statistics[id].gt10s++;
-  }
-}
-void statistics_log1(struct performance *s, char *name) {
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s);
-  log_message(log_msg);
-}
-void statistics_log() {
-  statistics_log1(&statistics[STATISTICS_WEBSERVER_LOOP], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
-  statistics_log1(&statistics[STATISTICS_WEBSERVER_CB], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
-  statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
-  statistics_log1(&statistics[STATISTICS_MQTT_LOOP], (char *)PSTR("STATISTICS_MQTT_LOOP"));
 }
 
 void loop() {
