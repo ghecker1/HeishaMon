@@ -1639,7 +1639,7 @@ void checkBootButton() {
 void loop() {
   statistics_end(STATISTICS_LOOP);
   statistics_start(STATISTICS_LOOP);
-  statistics_log();
+  //statistics_log();
 
   //check boot button state
   checkBootButton();
