@@ -2242,7 +2242,7 @@ err_t webserver_client(void *arg, tcp_pcb *pcb, err_t err) {
 }
 #endif
 
-void _webserver_loop(void) {
+void webserver_loop(void) {
   uint16_t size = 0;
   uint8_t i = 0;
 
@@ -2366,12 +2366,6 @@ void _webserver_loop(void) {
     }
   }
 #endif
-}
-
-void webserver_loop(void) {
-  //log_message(PSTR("> webserver_loop"));
-  _webserver_loop();
-  //log_message(PSTR("< webserver_loop"));
 }
 
 int8_t webserver_start(int port, webserver_cb_t *callback, uint8_t async) {

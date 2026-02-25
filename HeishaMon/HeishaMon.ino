@@ -801,7 +801,7 @@ void statistics_log() {
 
 
 
-int8_t _webserver_cb(struct webserver_t *client, void *dat) {
+int8_t webserver_cb(struct webserver_t *client, void *dat) {
   
 
   switch (client->step) {
@@ -1197,13 +1197,6 @@ int8_t _webserver_cb(struct webserver_t *client, void *dat) {
   }
 
   return 0;
-}
-
-int8_t webserver_cb(struct webserver_t *client, void *dat) {
-  statistics_start(STATISTICS_WEBSERVER_CB);
-  int8_t ret = _webserver_cb(client, dat);
-  statistics_end(STATISTICS_WEBSERVER_CB);
-  return ret;
 }
 
 void setupHttp() {
