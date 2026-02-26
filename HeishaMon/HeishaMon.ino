@@ -1822,7 +1822,7 @@ void loop() {
 
     //websocket stats
     char statistics[100];
-    sprintf_P(statistics, PSTR("\"max-loop-time: %d max-optionalpcb-time: %d\""), maxlooptime, maxoptionalpcbtime);
+    sprintf_P(statistics, PSTR("max-loop-time: %d max-optionalpcb-time: %d"), maxlooptime, maxoptionalpcbtime);
 #ifdef ESP32
     String ethernetStat;
     if (ETH.phyAddr() != 0) {        
