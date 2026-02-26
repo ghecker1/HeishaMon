@@ -1776,10 +1776,6 @@ void loop() {
 #endif
     stats += F("{\"uptime\":");
     stats += String(millis());
-    stats += F(",\"statistics\":");
-    char buf[200];
-    sprintf_P(buf, PSTR("\"max-loop-time: %d max-optionalpcb-time: %d\""), maxlooptime, maxoptionalpcbtime);
-    stats += buf;
     stats += F(",\"voltage\":");
 #if defined(ESP8266)
     stats += ESP.getVcc() / 1024.0;
@@ -1825,6 +1821,8 @@ void loop() {
     xdelay();
 
     //websocket stats
+    char statistics[100];
+    sprintf_P(statistics, PSTR("\"max-loop-time: %d max-optionalpcb-time: %d\""), maxlooptime, maxoptionalpcbtime);
 #ifdef ESP32
     String ethernetStat;
     if (ETH.phyAddr() != 0) {        
@@ -1844,11 +1842,11 @@ void loop() {
       ethernetStat = F("not installed");
     }
     char *getuptime = getUptime();
-    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"ethernet\": \"%s\", \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\"}}}"), getWifiQuality(), ethernetStat.c_str(), getFreeMemory(), readpercentage, mqttReconnects, getuptime);
+    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"ethernet\": \"%s\", \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\", \"statistics\": \"%s\"}}}"), getWifiQuality(), ethernetStat.c_str(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, statistics);
     free(getuptime);    
 #else
     char *getuptime = getUptime();
-    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\"}}}"), getWifiQuality(), getFreeMemory(), readpercentage, mqttReconnects, getuptime);    
+    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\",\"statistics\": \"%s\"}}}"), getWifiQuality(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, statistics);
     free(getuptime);    
 #endif
     
