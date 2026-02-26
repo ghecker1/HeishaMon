@@ -1613,6 +1613,9 @@ void load() {
 }
 
 void calclooptime() {
+  if (millis() < 10000) {
+    return;
+  }
   if (loopbegin) {
     unsigned long looptime = millis() - loopbegin;
     if (looptime > maxlooptime) {
@@ -1623,6 +1626,9 @@ void calclooptime() {
 }
 
 void calcoptionalpcbtime() {
+  if (millis() < 10000) {
+    return;
+  }
   if (optionalpcbbegin) {
     unsigned long optionalpcbtime = millis() - optionalpcbbegin;
     if (optionalpcbtime > maxoptionalpcbtime) {
@@ -1821,8 +1827,6 @@ void loop() {
     xdelay();
 
     //websocket stats
-    char statistics[100];
-    sprintf_P(statistics, PSTR("max-loop-time: %d max-optionalpcb-time: %d"), maxlooptime, maxoptionalpcbtime);
 #ifdef ESP32
     String ethernetStat;
     if (ETH.phyAddr() != 0) {        
@@ -1842,11 +1846,11 @@ void loop() {
       ethernetStat = F("not installed");
     }
     char *getuptime = getUptime();
-    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"ethernet\": \"%s\", \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\", \"statistics\": \"%s\"}}}"), getWifiQuality(), ethernetStat.c_str(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, statistics);
+    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"ethernet\": \"%s\", \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\", \"statistics\": \"max-loop-time:%d max-optionalpcb-time:%d\"}}}"), getWifiQuality(), ethernetStat.c_str(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, maxlooptime, maxoptionalpcbtime);
     free(getuptime);    
 #else
     char *getuptime = getUptime();
-    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\",\"statistics\": \"%s\"}}}"), getWifiQuality(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, statistics);
+    sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\",\"statistics\": \"max-loop-time:%d max-optionalpcb-time:%d\"}}}"), getWifiQuality(), getFreeMemory(), readpercentage, mqttReconnects, getuptime, maxlooptime, maxoptionalpcbtime);
     free(getuptime);    
 #endif
     
