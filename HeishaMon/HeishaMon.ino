@@ -1580,9 +1580,14 @@ void checkBootButton() {
 }
 
 void xdelay() {
+  static int i = 0;
   // set Force loading rules on boot=1 to enabled delays
   if (heishamonSettings.force_rules) {
     delay(1);
+  }
+  i++;
+  if ((i % 100) == 0) {
+    log_message((char*)"xdelay() called 100 times");
   }
 }
 
