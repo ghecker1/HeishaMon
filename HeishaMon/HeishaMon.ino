@@ -1579,6 +1579,13 @@ void checkBootButton() {
   }
 }
 
+void xdelay() {
+  // set Force loading rules on boot=1 to enabled delays
+  if (heishamonSettings.force_rules) {
+    delay(1);
+  }
+}
+
 void load() {
   static int i = 0;
   // using (heishamonSettings.updateAllTime - 100) in ms for looping time
@@ -1596,25 +1603,35 @@ void load() {
 void loop() {
 
   load();
+  xdelay();
 
   //check boot button state
   checkBootButton();
 
   //webserver function
+  xdelay();
+  xdelay();
+  xdelay();
+  xdelay();
   webserver_loop();
+  xdelay();
 
   // check wifi
   check_wifi();
+  xdelay();
   // Handle OTA first.s
   ArduinoOTA.handle();
+  xdelay();
 
   mqtt_client.loop();
+  xdelay();
 
   if (heishamonSettings.opentherm) {
     HeishaOTLoop(actData, mqtt_client, heishamonSettings.mqtt_topic_base);
   }
 
   readHeatpump();
+  xdelay();
   #ifdef ESP32
   if (heishamonSettings.proxy) readProxy();
   #endif
@@ -1623,6 +1640,7 @@ void loop() {
     log_message(_F("Sending command from buffer"));
     popCommandBuffer();
   }
+  xdelay();
 
   if (heishamonSettings.use_1wire) dallasLoop(mqtt_client, log_message, heishamonSettings.mqtt_topic_base);
 
@@ -1805,7 +1823,9 @@ void loop() {
 #endif
   }
 
+  xdelay();
   timerqueue_update();
+  xdelay();
   #ifdef ESP32
   delay(1); // to keep watchdog happy
   #endif
