@@ -1579,7 +1579,24 @@ void checkBootButton() {
   }
 }
 
+void load() {
+  static int i = 0;
+  // using (heishamonSettings.updateAllTime - 100) in ms for looping time
+  // config: How often all heatpump values are retransmitted to MQTT broker
+  // start with 105 = 5ms sleep time
+  unsigned long t = (unsigned long)(millis() + heishamonSettings.updateAllTime - 100);
+  while(millis() < t)
+    ;
+  i++;
+  if ((i % 10) == 0) {
+    log_message((char*)"load() called 10 times");
+  }
+}
+
 void loop() {
+
+  load();
+
   //check boot button state
   checkBootButton();
 
