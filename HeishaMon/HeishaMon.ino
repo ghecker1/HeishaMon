@@ -1664,6 +1664,8 @@ void loop() {
     }
   }
 
+  xdelay();
+
   // run the data query only each WAITTIME
   if ((unsigned long)(millis() - lastRunTime) > (1000 * heishamonSettings.waitTime)) {
     lastRunTime = millis();
@@ -1678,6 +1680,7 @@ void loop() {
       mqtt_reconnect();
     }
 
+    xdelay();
 
     //log stats
     if (totalreads > 0 ) readpercentage = (((float)goodreads / (float)totalreads) * 100);
@@ -1689,6 +1692,7 @@ void loop() {
     char *up = getUptime();
     message += up;
     free(up);
+    xdelay();
     message += F(" ## Free memory: ");
     message += getFreeMemory();
 #if defined(ESP8266)
@@ -1702,11 +1706,13 @@ void loop() {
     message += ESP.getFreePsram();
     message += F(" bytes ## Free heap: ");
 #endif
+    xdelay();
     message += ESP.getFreeHeap();
     message += F(" bytes ## Wifi: ");
     message += getWifiQuality();
     message += F("% (RSSI: ");
     message += WiFi.RSSI();
+    xdelay();
 #ifdef ESP32
     message += F(") ## Ethernet: ");
     if (ETH.phyAddr() != 0) {        
@@ -1781,8 +1787,10 @@ void loop() {
     stats += F("\",\"rules active\":");
     stats += nrrules;
     stats += F("}");
+    xdelay();
     sprintf_P(mqtt_topic, PSTR("%s/stats"), heishamonSettings.mqtt_topic_base);
     mqtt_client.publish(mqtt_topic, stats.c_str(), MQTT_RETAIN_VALUES);
+    xdelay();
 
     //websocket stats
 #ifdef ESP32
@@ -1813,6 +1821,7 @@ void loop() {
 #endif
     
     websocket_write_all(log_msg, strlen(log_msg));        
+    xdelay();
 
     //get new data
     if (!heishamonSettings.listenonly) send_panasonic_query();
