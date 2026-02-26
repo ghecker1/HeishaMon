@@ -55,7 +55,7 @@ ADC_MODE(ADC_VCC);
 
 const byte DNS_PORT = 53;
 
-#define SERIALTIMEOUT 2000 // wait until all 203 bytes are read, must not be too long to avoid blocking the code
+#define SERIALTIMEOUT 300 // wait until all 203 bytes are read, must not be too long to avoid blocking the code
 
 settingsStruct heishamonSettings;
 
