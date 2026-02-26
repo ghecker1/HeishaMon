@@ -1583,11 +1583,11 @@ void xdelay() {
   static int i = 0;
   // set Force loading rules on boot=1 to enabled delays
   if (heishamonSettings.force_rules) {
+    i++;
+    if ((i % 100) == 0) {
+      log_message((char*)"delay(1) called 100 times");
+    }
     delay(1);
-  }
-  i++;
-  if ((i % 100) == 0) {
-    log_message((char*)"xdelay() called 100 times");
   }
 }
 
