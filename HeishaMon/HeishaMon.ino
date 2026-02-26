@@ -89,6 +89,10 @@ unsigned long toolongread = 0;
 unsigned long timeoutread = 0;
 float readpercentage = 0;
 static int uploadpercentage = 0;
+unsigned long maxlooptime = 0;
+unsigned long loopbegin = 0;
+unsigned long maxoptionalpcbtime = 0;
+unsigned long optionalpcbbegin = 0;
 
 // instead of passing array pointers between functions we just define this in the global scope
 #define MAXDATASIZE 255
@@ -1544,8 +1548,11 @@ void send_panasonic_query() {
   }
 }
 
+void calcoptionalpcbtime();
+
 void send_optionalpcb_query() {
   log_message(_F("Sending optional PCB data"));
+  calcoptionalpcbtime();
   send_command(optionalPCBQuery, OPTIONALPCBQUERYSIZE);
 }
 
@@ -1605,8 +1612,29 @@ void load() {
   }
 }
 
-void loop() {
+void calclooptime() {
+  if (loopbegin) {
+    unsigned long looptime = millis() - loopbegin;
+    if (looptime > maxlooptime) {
+      maxlooptime = looptime;
+    }
+  }
+  loopbegin = millis();
+}
 
+void calcoptionalpcbtime() {
+  if (optionalpcbbegin) {
+    unsigned long optionalpcbtime = millis() - optionalpcbbegin;
+    if (optionalpcbtime > maxoptionalpcbtime) {
+      maxoptionalpcbtime = optionalpcbtime;
+    }
+  }
+  optionalpcbbegin = millis();
+}
+
+
+void loop() {
+  calclooptime();
   load();
   xdelay();
 
@@ -1748,6 +1776,10 @@ void loop() {
 #endif
     stats += F("{\"uptime\":");
     stats += String(millis());
+    stats += F(",\"statistics\":");
+    char buf[200];
+    sprintf_P(buf, PSTR("\"max-loop-time: %d max-optionalpcb-time: %d\""), maxlooptime, maxoptionalpcbtime);
+    stats += buf;
     stats += F(",\"voltage\":");
 #if defined(ESP8266)
     stats += ESP.getVcc() / 1024.0;

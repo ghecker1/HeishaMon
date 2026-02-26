@@ -1082,6 +1082,7 @@ int handleRoot(struct webserver_t *client, float readpercentage, int mqttReconne
         itoa(mqttReconnects, str, 10);
         webserver_send_content(client, (char *)str, strlen(str));
         webserver_send_content_P(client, webBodyRootStatusUptime, strlen_P(webBodyRootStatusUptime));
+        webserver_send_content_P(client, webBodyRootStatusStatistics, strlen_P(webBodyRootStatusStatistics));
         char *up = getUptime();
         webserver_send_content(client, up, strlen(up));
         free(up);

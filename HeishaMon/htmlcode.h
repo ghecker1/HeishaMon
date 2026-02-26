@@ -102,6 +102,10 @@ static const char websocketJS[] PROGMEM =
   "              if (elementuptime) {"
   "                elementuptime.textContent = jsonObject.data.stats.uptime;"
   "              }"              
+  "              const elementstatistics = document.getElementById(`statistics`);"
+  "              if (elementstatistics) {"
+  "                elementstatistics.textContent = jsonObject.data.stats.statistics;"
+  "              }"
   "             } else if (jsonObject.data.hasOwnProperty('heishavalues')) {"
   "              const valueelement = document.getElementById(`${jsonObject.data.heishavalues.topic}-Value`);"
   "              if ((valueelement) && (valueelement.textContent !== jsonObject.data.heishavalues.value)) {"
@@ -415,6 +419,7 @@ static const char webBodyRootStatusMemory[] PROGMEM =   "</span><br>Memory free:
 static const char webBodyRootStatusReceived[] PROGMEM =  "</span>%<br>Correct received data: <span id=\"correct\">";
 static const char webBodyRootStatusReconnects[] PROGMEM =  "</span>%<br>MQTT reconnects: <span id=\"mqtt\">";
 static const char webBodyRootStatusUptime[] PROGMEM =   "</span><br>Uptime: <span id=\"uptime\">";
+static const char webBodyRootStatusStatistics[] PROGMEM =   "</span><br>Statistics: <span id=\"statistics\">";
 static const char webBodyRootStatusEndSpan[] PROGMEM =   "</span>";
 static const char webBodyRootStatusListenOnly[] PROGMEM =   "</span><br><b>Listen only mode active</b>";
 
