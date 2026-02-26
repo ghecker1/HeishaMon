@@ -1598,7 +1598,7 @@ void load() {
   // start with 105 = 5ms sleep time
   unsigned long t = (unsigned long)(millis() + heishamonSettings.updateAllTime - 100);
   while(millis() < t)
-    ;
+    xdelay();
   i++;
   if ((i % 10) == 0) {
     log_message((char*)"load() called 10 times");
