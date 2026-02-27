@@ -822,8 +822,16 @@ void statistics_log() {
   }
 }
 
+int8_t _webserver_cb(struct webserver_t *client, void *dat);
 
 int8_t webserver_cb(struct webserver_t *client, void *dat) {
+  statistics_start(STATISTICS_WEBSERVER_CB);
+  int8_t r = _webserver_cb(client, dat);
+  statistics_end(STATISTICS_WEBSERVER_CB);
+  return r;
+}
+
+int8_t _webserver_cb(struct webserver_t *client, void *dat) {
   
 
   switch (client->step) {
