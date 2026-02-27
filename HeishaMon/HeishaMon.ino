@@ -816,7 +816,7 @@ void statistics_log() {
   if (millis() < next) {
     return;
   }
-  next = millis() + 1000;
+  next = millis() + 3000;
   for (int8_t i=0; i < statistics_n; i++) {
     statistics_log1(i);
   }
