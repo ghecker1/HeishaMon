@@ -758,10 +758,14 @@ struct performance {
   unsigned long max = 0;
 };
 
-const int8_t statistics_n = 4;
+const int8_t statistics_n = 8;
 enum {
   STATISTICS_WEBSERVER_LOOP = 0,
   STATISTICS_WEBSERVER_CB,
+  STATISTICS_WEBSOCKET,
+  STATISTICS_READ_HEATPUMP,
+  STATISTICS_WIFI,
+  STATISTICS_DATAQUERY,
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
 };
@@ -771,6 +775,10 @@ struct performance statistics[statistics_n];
 char *statistics_name[statistics_n] = {
   "STATISTICS_WEBSERVER_LOOP",
   "STATISTICS_WEBSERVER_CB",
+  "STATISTICS_WEBSOCKET",
+  "STATISTICS_READ_HEATPUMP",
+  "STATISTICS_WIFI",
+  "STATISTICS_DATAQUERY",
   "STATISTICS_LOOP",
   "STATISTICS_MQTT_LOOP"
 };
@@ -1654,25 +1662,29 @@ void loop() {
   //webserver function
   statistics_start(STATISTICS_WEBSERVER_LOOP);
   webserver_loop();
-  delay(1);
   statistics_end(STATISTICS_WEBSERVER_LOOP);
+  delay(1);
 
   // check wifi
+  statistics_start(STATISTICS_WIFI);
   check_wifi();
+  statistics_end(STATISTICS_WIFI);
   delay(1);
   // Handle OTA first.s
   ArduinoOTA.handle();
 
   statistics_start(STATISTICS_MQTT_LOOP);
   mqtt_client.loop();
-  delay(1);
   statistics_end(STATISTICS_MQTT_LOOP);
+  delay(1);
 
   if (heishamonSettings.opentherm) {
     HeishaOTLoop(actData, mqtt_client, heishamonSettings.mqtt_topic_base);
   }
 
+  statistics_start(STATISTICS_READ_HEATPUMP);
   readHeatpump();
+  statistics_end(STATISTICS_READ_HEATPUMP);
   delay(1);
   #ifdef ESP32
   if (heishamonSettings.proxy) readProxy();
@@ -1702,6 +1714,7 @@ void loop() {
   }
   delay(1);
 
+  statistics_start(STATISTICS_DATAQUERY);
   // run the data query only each WAITTIME
   if ((unsigned long)(millis() - lastRunTime) > (1000 * heishamonSettings.waitTime)) {
     lastRunTime = millis();
@@ -1850,8 +1863,9 @@ void loop() {
     sprintf_P(log_msg, PSTR("{\"data\": {\"stats\": {\"wifi\": %d, \"memory\": %d, \"correct\": %.0f,\"mqtt\": %d,\"uptime\": \"%s\"}}}"), getWifiQuality(), getFreeMemory(), readpercentage, mqttReconnects, getuptime);    
     free(getuptime);    
 #endif
-    
+    statistics_start(STATISTICS_WEBSOCKET);
     websocket_write_all(log_msg, strlen(log_msg));        
+    statistics_end(STATISTICS_WEBSOCKET,);
     delay(1);
 
     //get new data
@@ -1868,6 +1882,7 @@ void loop() {
     }
 #endif
   }
+  statistics_end(STATISTICS_DATAQUERY);
 
   timerqueue_update();
   delay(1);
