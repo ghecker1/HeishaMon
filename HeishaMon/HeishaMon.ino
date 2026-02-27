@@ -1865,7 +1865,7 @@ void loop() {
 #endif
     statistics_start(STATISTICS_WEBSOCKET);
     websocket_write_all(log_msg, strlen(log_msg));        
-    statistics_end(STATISTICS_WEBSOCKET,);
+    statistics_end(STATISTICS_WEBSOCKET);
     delay(1);
 
     //get new data
