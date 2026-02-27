@@ -750,6 +750,7 @@ void setupOTA() {
 }
 
 struct performance {
+  char *name;
   unsigned long tstart = 0;
   unsigned long lt100ms = 0;
   unsigned long lt1s = 0;
@@ -765,13 +766,13 @@ enum {
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
 };
-PGM_P statistics_name[statistics_n];
-statistics_name[STATISTICS_WEBSERVER_LOOP] = PSTR("STATISTICS_WEBSERVER_LOOP");
-statistics_name[STATISTICS_WEBSERVER_CB,] = PSTR("STATISTICS_WEBSERVER_CB");
-statistics_name[STATISTICS_LOOP,] = PSTR("STATISTICS_LOOP");
-statistics_name[STATISTICS_MQTT_LOOP] = PSTR("STATISTICS_MQTT_LOOP");
 
 struct performance statistics[statistics_n];
+
+statistics[STATISTICS_WEBSERVER_LOOP].name = "STATISTICS_WEBSERVER_LOOP";
+statistics[STATISTICS_WEBSERVER_CB].name = "STATISTICS_WEBSERVER_CB";
+statistics[STATISTICS_LOOP].name = "STATISTICS_LOOP";
+statistics[STATISTICS_MQTT_LOOP].name = "STATISTICS_MQTT_LOOP";
 
 void statistics_start(int id) {
   statistics[id].tstart = millis();
@@ -795,11 +796,9 @@ void statistics_end(int id) {
     statistics[id].max = t;
   }
 }
-char statistics_name_tmp[30];
 
 void statistics_log1(int id) {
-  strcpy_P(statistics_name_tmp, statistics_name[id]);
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), statistics_name_tmp, statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
+  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), statistics[id].name, statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
   log_message(log_msg);
 }
 void statistics_log() {
