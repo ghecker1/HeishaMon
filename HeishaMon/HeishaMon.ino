@@ -750,7 +750,6 @@ void setupOTA() {
 }
 
 struct performance {
-  char *name;
   unsigned long tstart = 0;
   unsigned long lt100ms = 0;
   unsigned long lt1s = 0;
@@ -769,10 +768,12 @@ enum {
 
 struct performance statistics[statistics_n];
 
-statistics[STATISTICS_WEBSERVER_LOOP].name = "STATISTICS_WEBSERVER_LOOP";
-statistics[STATISTICS_WEBSERVER_CB].name = "STATISTICS_WEBSERVER_CB";
-statistics[STATISTICS_LOOP].name = "STATISTICS_LOOP";
-statistics[STATISTICS_MQTT_LOOP].name = "STATISTICS_MQTT_LOOP";
+char *statistics_name[statistics_n] = {
+  "STATISTICS_WEBSERVER_LOOP",
+  "STATISTICS_WEBSERVER_CB",
+  "STATISTICS_LOOP",
+  "STATISTICS_MQTT_LOOP"
+};
 
 void statistics_start(int id) {
   statistics[id].tstart = millis();
@@ -798,11 +799,12 @@ void statistics_end(int id) {
 }
 
 void statistics_log1(int id) {
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), statistics[id].name, statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
+  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), statistics_name[id], statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
   log_message(log_msg);
 }
 void statistics_log() {
   static unsigned long next = 0;
+  // FIXME: will fail after overflow
   if (millis() < next) {
     return;
   }
