@@ -766,10 +766,10 @@ enum {
   STATISTICS_MQTT_LOOP
 };
 PGM_P statistics_name[statistics_n] = {
-  PSTR("STATISTICS_WEBSERVER_LOOP"),
-  PSTR("STATISTICS_WEBSERVER_CB"),
-  PSTR("STATISTICS_LOOP"),
-  PSTR("STATISTICS_MQTT_LOOP")
+  _F("STATISTICS_WEBSERVER_LOOP"),
+  _F("STATISTICS_WEBSERVER_CB"),
+  _F("STATISTICS_LOOP"),
+  _F("STATISTICS_MQTT_LOOP")
 };
 struct performance statistics[statistics_n];
 
