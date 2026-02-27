@@ -755,14 +755,14 @@ struct performance {
   unsigned long lt1s = 0;
   unsigned long lt10s = 0;
   unsigned long gt10s = 0;
+  unsigned long max = 0;
 };
-struct performance statistics[1];
+struct performance statistics[4];
 enum {
-  STATISTICS_WEBSERVER_LOOP = 0  /*,
+  STATISTICS_WEBSERVER_LOOP = 0,
   STATISTICS_WEBSERVER_CB,
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
-*/
 };
 void statistics_start(int id) {
   statistics[id].tstart = millis();
@@ -782,10 +782,12 @@ void statistics_end(int id) {
   } else {
     statistics[id].gt10s++;
   }
+  if (t > statistics[id].max) {
+    statistics[id].max = t;
+  }
 }
-/*
 void statistics_log1(struct performance *s, char *name) {
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s);
+  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s, s->max);
   log_message(log_msg);
 }
 void statistics_log() {
@@ -799,7 +801,6 @@ void statistics_log() {
   statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
   statistics_log1(&statistics[STATISTICS_MQTT_LOOP], (char *)PSTR("STATISTICS_MQTT_LOOP"));
 }
-*/
 
 
 int8_t webserver_cb(struct webserver_t *client, void *dat) {
@@ -1631,9 +1632,9 @@ void checkBootButton() {
 }
 
 void loop() {
-  //statistics_end(STATISTICS_LOOP);
-  //statistics_start(STATISTICS_LOOP);
-  //statistics_log();
+  statistics_end(STATISTICS_LOOP);
+  statistics_start(STATISTICS_LOOP);
+  statistics_log();
 
   //check boot button state
   checkBootButton();
@@ -1650,10 +1651,10 @@ void loop() {
   // Handle OTA first.s
   ArduinoOTA.handle();
 
-  //statistics_start(STATISTICS_MQTT_LOOP);
+  statistics_start(STATISTICS_MQTT_LOOP);
   mqtt_client.loop();
   delay(1);
-  //statistics_end(STATISTICS_MQTT_LOOP);
+  statistics_end(STATISTICS_MQTT_LOOP);
 
   if (heishamonSettings.opentherm) {
     HeishaOTLoop(actData, mqtt_client, heishamonSettings.mqtt_topic_base);
