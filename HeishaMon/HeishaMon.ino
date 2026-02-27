@@ -807,7 +807,7 @@ void statistics_end(int id) {
 }
 
 void statistics_log1(int id) {
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), statistics_name[id], statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
+  sprintf_P(log_msg, PSTR("%28s: %8d %5d %4d %4d %6d"), statistics_name[id], statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
   log_message(log_msg);
 }
 void statistics_log() {
