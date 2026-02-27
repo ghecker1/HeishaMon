@@ -765,12 +765,12 @@ enum {
   STATISTICS_LOOP,
   STATISTICS_MQTT_LOOP
 };
-PGM_P statistics_name[statistics_n] = {
-  _F("STATISTICS_WEBSERVER_LOOP"),
-  _F("STATISTICS_WEBSERVER_CB"),
-  _F("STATISTICS_LOOP"),
-  _F("STATISTICS_MQTT_LOOP")
-};
+PGM_P statistics_name[statistics_n];
+statistics_name[STATISTICS_WEBSERVER_LOOP] = PSTR("STATISTICS_WEBSERVER_LOOP");
+statistics_name[STATISTICS_WEBSERVER_CB,] = PSTR("STATISTICS_WEBSERVER_CB");
+statistics_name[STATISTICS_LOOP,] = PSTR("STATISTICS_LOOP");
+statistics_name[STATISTICS_MQTT_LOOP] = PSTR("STATISTICS_MQTT_LOOP");
+
 struct performance statistics[statistics_n];
 
 void statistics_start(int id) {
