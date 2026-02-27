@@ -786,8 +786,8 @@ void statistics_end(int id) {
     statistics[id].max = t;
   }
 }
-void statistics_log1(struct performance *s, char *name) {
-  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), name, s->lt100ms, s->lt1s, s->lt10s, s->gt10s, s->max);
+void statistics_log1(int id, char *name) {
+  sprintf_P(log_msg, PSTR("%s: %d %d %d %d %d"), name, statistics[id].lt100ms, statistics[id].lt1s, statistics[id].lt10s, statistics[id].gt10s, statistics[id].max);
   log_message(log_msg);
 }
 void statistics_log() {
@@ -796,10 +796,10 @@ void statistics_log() {
     return;
   }
   next = millis() + 1000;
-  statistics_log1(&statistics[STATISTICS_WEBSERVER_LOOP], (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
-  statistics_log1(&statistics[STATISTICS_WEBSERVER_CB], (char *)PSTR("STATISTICS_WEBSERVER_CB"));
-  statistics_log1(&statistics[STATISTICS_LOOP], (char *)PSTR("STATISTICS_LOOP"));
-  statistics_log1(&statistics[STATISTICS_MQTT_LOOP], (char *)PSTR("STATISTICS_MQTT_LOOP"));
+  statistics_log1(STATISTICS_WEBSERVER_LOOP, (char *)PSTR("STATISTICS_WEBSERVER_LOOP"));
+  statistics_log1(STATISTICS_WEBSERVER_CB, (char *)PSTR("STATISTICS_WEBSERVER_CB"));
+  statistics_log1(STATISTICS_LOOP, (char *)PSTR("STATISTICS_LOOP"));
+  statistics_log1(STATISTICS_MQTT_LOOP, (char *)PSTR("STATISTICS_MQTT_LOOP"));
 }
 
 
