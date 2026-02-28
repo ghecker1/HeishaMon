@@ -1763,13 +1763,17 @@ int8_t webserver_send(struct webserver_t *client, uint16_t code, char *mimetype,
 
     i += snprintf((char *)&p[i], sizeof(buffer)-i, PSTR("Keep-Alive: timeout=15, max=100\r\n"));
     i += snprintf((char *)&p[i], sizeof(buffer)-i, PSTR("Content-Type: %s\r\n"), mimetype);
-    i += snprintf((char *)&p[i], sizeof(buffer)-i, PSTR("Transfer-Encoding: chunked\r\n\r\n"));
+    i += snprintf((char *)&p[i], sizeof(buffer)-i, PSTR("Transfer-Encoding: chunked\r\n"));
 
 done:
     if(client->async == 1) {
+      i += snprintf((char *)&p[i], sizeof(buffer)-i, PSTR("\r\n"));
       tcp_write(client->pcb, &buffer, i, 0);
       tcp_output(client->pcb);
     } else{
+      int n = client->client->availableForWrite();
+      i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("X-availableForWrite: %d\r\n"), n);
+      i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("\r\n"));
       if(client->client->write((unsigned char *)&buffer, i) > 0) {
         if(client->is_websocket == 0) {
           client->lastseen = millis();
