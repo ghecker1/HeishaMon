@@ -2242,11 +2242,19 @@ err_t webserver_client(void *arg, tcp_pcb *pcb, err_t err) {
 }
 #endif
 
-void webserver_loop(void) {
-  uint16_t size = 0;
-  uint8_t i = 0;
+void _webserver_loop(uint8_t i);
 
-  for(i=0;i<WEBSERVER_MAX_CLIENTS;i++) {
+void webserver_loop(void) {
+  static uint8_t i = 0;
+  _webserver_loop(i);
+  i = (i + 1) % WEBSERVER_MAX_CLIENTS;
+}
+
+void _webserver_loop(uint8_t i) {
+  uint16_t size = 0;
+  uint8_t k = 0;
+
+  for (k=0; k<=0; k++) {
 #if defined(ESP8266) || defined(ESP32)
     delay(1);
 #endif
@@ -2346,7 +2354,7 @@ void webserver_loop(void) {
 
 #if defined(ESP8266) || defined(ESP32)
   if(sync_server.hasClient()) {
-    for(i=0;i<WEBSERVER_MAX_CLIENTS;i++) {
+    for (k=0; k<=0; k++) {
       if(clients[i].data.client == NULL) {
         webserver_reset_client(&clients[i].data);
         clients[i].data.client = new WiFiClient(sync_server.accept());
