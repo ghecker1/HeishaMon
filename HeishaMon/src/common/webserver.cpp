@@ -1256,13 +1256,17 @@ static uint16_t webserver_create_header(struct webserver_t *client, uint16_t cod
   i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("Server: HeishaMon\r\n"));
   i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("Keep-Alive: timeout=15, max=100\r\n"));
   i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("Content-Type: %s\r\n"), mimetype);
-  i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("Content-Length: %d\r\n\r\n"), len);
+  i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("Content-Length: %d\r\n"), len);
 
 
   if(client->async == 1) {
+    i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("\r\n"), len);
     tcp_write(client->pcb, &buffer, i, 0);
     tcp_output(client->pcb);
   } else {
+    int n = client->client->availableForWrite();
+    i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("X-availableForWrite: %d\r\n"), n);
+    i += snprintf_P((char *)&p[i], sizeof(buffer) - i, PSTR("\r\n"), len);
     if(client->client->write(buffer, i) > 0) {
       if(client->is_websocket == 0) {
         client->lastseen = millis();
