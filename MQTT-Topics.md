@@ -160,6 +160,7 @@ TOP140 | main/Smart_DHW | Smart DHW
 TOP141 | main/Quiet_Mode_Priority | Quiet Mode Priority (0=sound, 1=capacity)
 TOP142 | main/Expansion_Valve | Expansion Valve (Steps)
 TOP143 | main/DHW_Sensor_Selection | DHW tank sensor selection (0=Top, 1=Center) (K/L series All-In-One only)
+TOP144 | main/Demand_Control_Enabled | Demand Control (0=disabled, 1=enabled)
 
 
 
@@ -192,6 +193,7 @@ OPT3 | optional/Z2_Mixing_Valve | Z2 mixing valve action request (0=off, 1=decre
 OPT4 | optional/Pool_Water_Pump | Pool water pump action request (0=off, 1=on)
 OPT5 | optional/Solar_Water_Pump | Solar water pump action request (0=off, 1=on)
 OPT6 | optional/Alarm_State | Alarm state (0=off, 1=on)
+OPT7 | optional/Demand_Control | Demand Control
 
 ## Command Topics:
 
@@ -251,6 +253,9 @@ SET45 | SetRoomHeaterState | Allow Room backup/booster heater | 0=blocked, 1=fre
 SET46 | SetHeaterOnOutdoorTemp | Outdoor temperature for heater ON | -15 to 20
 SET47 | SetForceHeater | Force heater mode (emergency heating), same as the heater button on the remote. State is reported in TOP68 | 0=off, 1=on
 SET48 | SetReset | Reset/confirm active heatpump fault code (e.g. H72). Equivalent to pressing "Reset" on the CZ-TAW1 remote / indoor unit panel. Writes byte 8 of the outgoing query. Clears latched errors that soft power-cycle (`SetHeatpump` 0→1) cannot clear. | 0=no action, 1=reset
+SET49 | SetOptionalPCB | Set Optional PCB | 0=off, 1=on
+SET50 | SetHeatingMode | Set heating mode. Note: Use with care. The heat curve and timers will be re-set to default. | 0=compensation curve, 1=direct
+SET51 | SetDemandControlEnabled | Set demand control enabled | 0=disabled, 1=enabled
 
 
 *If you operate your heatpump in water mode with direct temperature setup: topics ending xxxRequestTemperature will set the absolute target temperature.*

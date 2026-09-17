@@ -42,9 +42,9 @@ static const char _unknown[] PROGMEM = "unknown";
 
 
 
-#define NUMBER_OF_TOPICS 144 //last topic number + 1
+#define NUMBER_OF_TOPICS 145 //last topic number + 1
 #define NUMBER_OF_TOPICS_EXTRA 6 //last topic number + 1
-#define NUMBER_OF_OPT_TOPICS 7 //last topic number + 1
+#define NUMBER_OF_OPT_TOPICS 8 //last topic number + 1
 #define MAX_TOPIC_LEN 42 // max length + 1
 
 static const char optTopics[][20] PROGMEM = {
@@ -55,6 +55,7 @@ static const char optTopics[][20] PROGMEM = {
   "Pool_Water_Pump", // OPT4
   "Solar_Water_Pump", // OPT5
   "Alarm_State", // OPT6
+  "Demand_Control", // OPT7
 };
 
 static const char xtopics[][MAX_TOPIC_LEN] PROGMEM = {
@@ -220,6 +221,7 @@ static const char topics[][MAX_TOPIC_LEN] PROGMEM = {
   "Quiet_Mode_Priority",     //TOP141
   "Expansion_Valve",         //TOP142
   "DHW_Sensor_Selection",    //TOP143
+  "Demand_Control_Enabled",  //TOP144
 };
 
 static const byte topicBytes[] PROGMEM = { //can store the index as byte (8-bit unsigned humber) as there aren't more then 255 bytes (actually only 203 bytes) to decode
@@ -367,6 +369,7 @@ static const byte topicBytes[] PROGMEM = { //can store the index as byte (8-bit 
   11,    //TOP141
   175,   //TOP142
   11,    //TOP143
+  27,    //TOP144
 };
 
 
@@ -526,6 +529,7 @@ static const topicFP topicFunctions[] PROGMEM = {
   getBit3and4,       //TOP141
   getIntMinus1,      //TOP142
   getBit7and8,       //TOP143
+  getBit7and8,       //TOP144
 };
 
 static const char *DisabledEnabled[] PROGMEM = {"2", "Disabled", "Enabled"};
@@ -568,6 +572,7 @@ static const char *SmartDHW[] PROGMEM = {"2", "Variable", "Standard"};
 static const char *QuietModePriority[] PROGMEM = {"2", "Sound", "Capacity"};
 static const char *DHWSensorType[] PROGMEM = {"2", "Top", "Center"};
 static const char *Steps[] PROGMEM = {"0", "Steps"};
+static const char *DemandControl[] PROGMEM = {"0", "Demand Control"};
 
 static const char **opttopicDescription[] PROGMEM = {
   OffOn,          //OPT0
@@ -577,6 +582,7 @@ static const char **opttopicDescription[] PROGMEM = {
   OffOn,          //OPT4
   OffOn,          //OPT5
   OffOn,          //OPT6
+  DemandControl,  //OPT7
 };
 
 static const char **xtopicDescription[] PROGMEM = {
@@ -733,4 +739,5 @@ static const char **topicDescription[] PROGMEM = {
   QuietModePriority, //TOP141
   Steps,             //TOP142
   DHWSensorType,     //TOP143
+  DisabledEnabled,   //TOP144
 };
